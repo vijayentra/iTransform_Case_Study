@@ -6,33 +6,19 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "Customer")
-public class Customer {
-	
+
+@Document(collection = "Washer")
+public class Washer {
 	@Id
 	private String id;
 	private String phoneNumber;
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String pinCode;
-	private double rating =0;
-	private List<CarDetails> carsList = new ArrayList<>();
+	private String age;
+	private double rating = 0.0;
 	private List<String> washList = new ArrayList<>();
 	
-	
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}
@@ -45,17 +31,23 @@ public class Customer {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getPinCode() {
-		return pinCode;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setPinCode(String pinCode) {
-		this.pinCode = pinCode;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
-	public List<CarDetails> getCarsList() {
-		return carsList;
+	public String getLastName() {
+		return lastName;
 	}
-	public void setCarsList(List<CarDetails> carsList) {
-		this.carsList = carsList;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	public String getAge() {
+		return age;
+	}
+	public void setAge(String age) {
+		this.age = age;
 	}
 	public double getRating() {
 		return rating;

@@ -1,6 +1,7 @@
 package com.customer.controller;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +44,13 @@ public class CustomerController {
 	//ADD A CAR DETAIL TO A CUSTOMER
 	@PostMapping("/addCar/{phoneNumber}")
 	public ResponseEntity<?> addCarDetails(@PathVariable String phoneNumber,@RequestBody CarDetails carDetails ){
-		Customer cus = null;
+		CarDetails car = null;
 		try {
-			cus = customerService.addCarDetails(phoneNumber, carDetails);
+			car = customerService.addCarDetails(phoneNumber, carDetails);
 		}catch(InvalidDetailsException e) {
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(cus,HttpStatus.OK); 
+		return new ResponseEntity<>(car,HttpStatus.OK); 
 	}
 	
 	//UPDATE DETAILS OF A CUSTOMER
@@ -68,13 +69,13 @@ public class CustomerController {
 	@PutMapping("/updateCarDetails/{phoneNumber}/{plateNumber}")
 	public ResponseEntity<?> updateCarDetails(@PathVariable String phoneNumber,@PathVariable String plateNumber,
 			@RequestBody CarDetails  carDetails){
-		Customer cus = null;
+		CarDetails car = null;
 		try {
-			cus = customerService.updateCarDetails(phoneNumber, plateNumber, carDetails);
+			car = customerService.updateCarDetails(phoneNumber, plateNumber, carDetails);
 		}catch(InvalidDetailsException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(cus,HttpStatus.OK);
+		return new ResponseEntity<>(car,HttpStatus.OK);
 	}
 	
 	//DELETE A CAR'S DETAILS FROM A CUSTOMER

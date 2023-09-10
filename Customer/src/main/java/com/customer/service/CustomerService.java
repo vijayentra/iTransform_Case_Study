@@ -10,10 +10,10 @@ import com.customer.entity.Customer;
 public interface CustomerService {
 		
 		public Customer updateCustomer(String PhoneNumber, Customer customer);
-		public Customer updateCarDetails(String phoneNumber,String plateNumber, CarDetails carDetails);
+		public CarDetails updateCarDetails(String phoneNumber,String plateNumber, CarDetails carDetails);
 		
 		public Customer addCustomer(Customer customer);
-		public Customer addCarDetails(String phoneNumber, CarDetails carDetails);
+		public CarDetails addCarDetails(String phoneNumber, CarDetails carDetails);
 		
 		public void deleteCustomer(String phoneNumber);
 		public void deleteCarDetails(String phoneNumber, String numberPlate);
