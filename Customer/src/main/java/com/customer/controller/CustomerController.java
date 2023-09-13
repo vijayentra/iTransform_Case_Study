@@ -1,7 +1,6 @@
 package com.customer.controller;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +101,7 @@ public class CustomerController {
 	
 	//VIEW DETAILS OF A CUSTOMER
 	@GetMapping("/viewCustomer/{phoneNumber}")
-	public ResponseEntity<?> viewCustomer(@PathVariable String phoneNumber){
+	public ResponseEntity<Object> viewCustomer(@PathVariable String phoneNumber){
 		Customer cus = null;
 		try {
 			cus = customerService.viewCustomer(phoneNumber);
