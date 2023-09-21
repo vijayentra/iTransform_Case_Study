@@ -24,4 +24,5 @@ public interface CustomerService {
 		public CarDetails viewCarDetails(String phoneNumber, String numberPlate);
 		public List<CarDetails> viewAllCarDetails(String phoneNumber);
 		
+		public Customer updateCustomerRating(String phoneNumber, int rating);
 }

@@ -1,12 +1,20 @@
 package com.customer.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import com.customer.dummyentity.BookingDetails;
 import com.customer.entity.CarDetails;
 import com.customer.entity.Customer;
 import com.customer.exception.InvalidDetailsException;
@@ -16,6 +24,10 @@ import com.customer.repository.CustomerRepository;
 public class CustomerServiceImpl implements CustomerService {
 	@Autowired
 	private CustomerRepository customerRepository;
+	@Autowired 
+	private RestTemplate rest;
+	
+	private static final int bPort = 8082;
 	
 	@Override
 	public Customer updateCustomer(String phoneNumber,Customer customer) throws InvalidDetailsException{
@@ -46,6 +58,38 @@ public class CustomerServiceImpl implements CustomerService {
 				if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
 				
 				if(msg.equals("")) {
+					List<BookingDetails> list = null;
+					ResponseEntity<List<BookingDetails>> response = rest.exchange(
+						    "http://localhost:"+bPort+"/booking/viewBookingHistory",
+						    HttpMethod.GET,
+						    null,
+						    new ParameterizedTypeReference<List<BookingDetails>>() {}
+						);
+
+						if (response.getStatusCode()==HttpStatus.OK) {
+						    list =  response.getBody();
+						}
+					for(BookingDetails bd : list) {
+						if(bd.getCustomerPhoneNumber().equals(phoneNumber)) {
+							String name = customer.getFirstName()+" "+ customer.getLastName();
+							String url = "http://localhost:"+bPort+"/booking/updateCustomerDetails/{oldPhoneNumber}/{customerName}/{phoneNumber}";
+
+							// Set up the URL parameters
+							Map<String, String> urlParams = new HashMap<>();
+							urlParams.put("oldPhoneNumber", phoneNumber);
+							urlParams.put("customerName", name);
+							urlParams.put("phoneNumber", customer.getPhoneNumber());
+
+							// Send a PUT request
+							ResponseEntity<String> responseEntity = rest.exchange(
+							    url,
+							    HttpMethod.PUT,
+							    null,
+							    String.class,
+							    urlParams
+							);
+						}
+					}
 					c.setPhoneNumber(customer.getPhoneNumber());
 					c.setFirstName(customer.getFirstName());
 					c.setLastName(customer.getLastName());
@@ -65,7 +109,7 @@ public class CustomerServiceImpl implements CustomerService {
 			if(c.getPhoneNumber().equals(phoneNumber)) {
 				for(CarDetails car : c.getCarsList()) {
 					if(plateNumber.equals(car.getNumberPlate())) {
-						String numRegex = "^[A-Z]{2}\\s[0-9]{2}\\s[A-Z]{2}\\s[0-9]{4}$";
+						String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
 						Pattern carP = Pattern.compile(numRegex);
 						Matcher m5 = carP.matcher(carDetails.getNumberPlate());
 						if(!m5.matches()) msg = msg + "Check car number plate: "+carDetails.getNumberPlate()+".\n";
@@ -149,7 +193,7 @@ public class CustomerServiceImpl implements CustomerService {
 				msg = msg + "Multiple cars cannot have same number plate.\n";
 				break;
 			}
-			String numRegex = "^[A-Z]{2}\\s[0-9]{2}\\s[A-Z]{2}\\s[0-9]{4}$";
+			String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
 			Pattern carP = Pattern.compile(numRegex);
 			Matcher m5 = carP.matcher(car.getNumberPlate());
 			if(!m5.matches()) msg = msg + "Check car number plate: "+car.getNumberPlate()+".\n";
@@ -188,11 +232,11 @@ public class CustomerServiceImpl implements CustomerService {
 				num+=1;
 				}
 			}
-			if(num>1) {
+			if(num>0) {
 				msg = msg + "Multiple cars cannot have same number plate.\n";
 				throw new InvalidDetailsException(msg);
 			}
-			String numRegex = "^[A-Z]{2}\\s[0-9]{2}\\s[A-Z]{2}\\s[0-9]{4}$";
+			String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
 			Pattern carP = Pattern.compile(numRegex);
 			Matcher m5 = carP.matcher(carDetails.getNumberPlate());
 			if(!m5.matches()) msg = msg + "Check car number plate: "+carDetails.getNumberPlate()+".\n";
@@ -277,6 +321,18 @@ public class CustomerServiceImpl implements CustomerService {
 		Customer cus = customerRepository.findByPhoneNumber(phoneNumber).
 				orElseThrow(()-> new InvalidDetailsException("Customer does not exist. "));
 		return cus.getCarsList();
+	}
+
+	@Override
+	public Customer updateCustomerRating(String phoneNumber, int rating) {
+		Customer cus = customerRepository.findByPhoneNumber(phoneNumber).
+				orElseThrow(()-> new InvalidDetailsException("Customer does not exist. "));
+		double r = 0;
+		r = (cus.getRating()*cus.getWashesDone()+rating)/(cus.getWashesDone()+1);
+		r = Math.round(r * Math.pow(10, 1)) / Math.pow(10, 1);
+		cus.setRating(r);
+		cus.setWashesDone(cus.getWashesDone()+1);
+		return customerRepository.save(cus);
 	}
 
 	

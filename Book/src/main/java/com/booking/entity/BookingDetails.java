@@ -1,14 +1,17 @@
 package com.booking.entity;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-//@Document
+@Document(collection = "BookingDetails")
 public class BookingDetails {
+	 @Id
+	 private String id;
+	 private String bookingDateAndTime = null;
+	 private String bookingId = null;
+	 
 	 private String carNumber;
 	 private String washDate;
 	 private String washTime;
@@ -17,22 +20,15 @@ public class BookingDetails {
 	 
 	 private String customerName = null;
 	 private String customerPhoneNumber = null;
-	 private String washerPhoneNumber = null;
+	 private double customerRating;
 	 private String washerName = null;
-	 private String bookingId = null;
-	 private int washerRating = 0;
-	 private int customerRating = 0;
-	 private LocalDateTime bookingDateAndTime = LocalDateTime.now();
+	 private String washerPhoneNumber = null;
+	 private double washerRating;
 	 private String washStatus = "REQUESTED";
-	 private double washCost = 0.0;
-	 private double invoiceId = 0;
+	 private int washerRatingGiven;
+	 private int customerRatingGiven;
+	 private InvoiceDetails invoice = null;
 	 
-//	public String getId() {
-//		return id;
-//	}
-//	public void setId(String id) {
-//		this.id = id;
-//	}
 	public String getBookingId() {
 		return bookingId;
 	}
@@ -57,22 +53,22 @@ public class BookingDetails {
 	public void setWasherName(String washerName) {
 		this.washerName = washerName;
 	}
-	public int getWasherRating() {
+	public double getWasherRating() {
 		return washerRating;
 	}
-	public void setWasherRating(int washerRating) {
+	public void setWasherRating(double washerRating) {
 		this.washerRating = washerRating;
 	}
-	public int getCustomerRating() {
+	public double getCustomerRating() {
 		return customerRating;
 	}
-	public void setCustomerRating(int customerRating) {
+	public void setCustomerRating(double customerRating) {
 		this.customerRating = customerRating;
 	}
-	public LocalDateTime getBookingDateAndTime() {
+	public String getBookingDateAndTime() {
 		return bookingDateAndTime;
 	}
-	public void setBookingDateAndTime(LocalDateTime bookingDateAndTime) {
+	public void setBookingDateAndTime(String bookingDateAndTime) {
 		this.bookingDateAndTime = bookingDateAndTime;
 	}
 	public String getWashDate() {
@@ -105,18 +101,6 @@ public class BookingDetails {
 	public void setWashAddOn(List<String> washAddOn) {
 		this.washAddOn = washAddOn;
 	}
-	public double getInvoiceId() {
-		return invoiceId;
-	}
-	public void setInvoiceId(double invoiceId) {
-		this.invoiceId = invoiceId;
-	}
-	public double getWashCost() {
-		return washCost;
-	}
-	public void setWashCost(double washCost) {
-		this.washCost = washCost;
-	}
 	public String getCustomerPhoneNumber() {
 		return customerPhoneNumber;
 	}
@@ -129,4 +113,28 @@ public class BookingDetails {
 	public void setWasherPhoneNumber(String washerPhoneNumber) {
 		this.washerPhoneNumber = washerPhoneNumber;
 	}
+	public int getWasherRatingGiven() {
+		return washerRatingGiven;
+	}
+	public void setWasherRatingGiven(int washerRatingGiven) {
+		this.washerRatingGiven = washerRatingGiven;
+	}
+	public int getCustomerRatingGiven() {
+		return customerRatingGiven;
+	}
+	public void setCustomerRatingGiven(int customerRatingGiven) {
+		this.customerRatingGiven = customerRatingGiven;
+	}
+	public InvoiceDetails getInvoice() {
+		return invoice;
+	}
+	public void setInvoice(InvoiceDetails invoice) {
+		this.invoice = invoice;
+	}
+//	public String getId() {
+//		return id;
+//	}
+//	public void setId(String id) {
+//		this.id = id;
+//	}
 }

@@ -146,4 +146,15 @@ public class CustomerController {
 		}
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
+	
+	@PutMapping("/updateCustomerRating/{phoneNumber}/{rating}")
+	public ResponseEntity<?> updateCustomerRating(@PathVariable String phoneNumber,@PathVariable int rating){
+		Customer c = null;
+		try {
+			c = customerService.updateCustomerRating(phoneNumber, rating);
+		}catch(InvalidDetailsException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(c,HttpStatus.OK);
+	}
 }

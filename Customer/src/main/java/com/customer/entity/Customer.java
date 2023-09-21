@@ -16,9 +16,9 @@ public class Customer {
 	private String firstName;
 	private String lastName;
 	private String pinCode;
-	private double rating =0;
 	private List<CarDetails> carsList = new ArrayList<>();
-	private List<String> washList = new ArrayList<>();
+	private double rating =0.0;
+	private int washesDone = 0;
 	
 	
 	public String getFirstName() {
@@ -63,16 +63,17 @@ public class Customer {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-	public List<String> getWashList() {
-		return washList;
+//	public String getId() {
+//		return id;
+//	}
+//	public void setId(String id) {
+//		this.id = id;
+//	}
+	public int getWashesDone() {
+		return washesDone;
 	}
-	public void setWashList(List<String> washList) {
-		this.washList = washList;
+	public void setWashesDone(int washesDone) {
+		this.washesDone = washesDone;
 	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
+	
 }

@@ -1,24 +1,29 @@
 package com.booking.service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 
+
+import java.util.List;
 
 import com.booking.entity.BookingDetails;
-import com.booking.entity.BookingHistory;
+import com.booking.entity.InvoiceDetails;
 
 public interface BookingService {
 		
-	public BookingHistory bookWash(long phoneNumber,BookingDetails bookingDetails);
-	public BookingDetails rescheduleWash(String bookingId, LocalDate washdate, LocalTime washTime);
+	public BookingDetails bookWash(long phoneNumber,BookingDetails bookingDetails);
+	public BookingDetails rescheduleWash(String bookingId, String washdate, String washTime);
 	public BookingDetails cancelWash(String bookingId);
 	public BookingDetails respondWash(String bookingId, String response);
 	public BookingDetails washComplete(String BookingId, int rating);
 	public BookingDetails rateWasher(String bookingId, int rating);
 	
-//	public BookingDetails addBooking(BookingDetails bookingDetails);
-//	public BookingDetails updateRescheduleBooking(String bookingId, LocalDate washdate, LocalTime washTime);
-//	public BookingDetails updateCancelBooking(String bookingId);
-//	public BookingDetails updateRespondBooking(String bookingId, String response);
-//	public BookingDetails 
+	public void updateWasherDetails(String bookingId, String name, String phoneNumber);
+	public void updateCustomerDetails(String bookingId, String name, String phoneNumber);
+	
+	public BookingDetails viewBookingDetails(String bookingId);
+	public List<BookingDetails> viewBookingHistory();
+	public List<BookingDetails> viewCustomerHistory(String phoneNumber);
+	public List<BookingDetails> viewWasherHistory(String phoneNumber);
+	
+	public InvoiceDetails viewInvoiceDetails(String billingId);
+	
 }
