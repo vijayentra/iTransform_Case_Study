@@ -12,12 +12,12 @@ import com.booking.repository.AddOnsRepository;
 import com.booking.repository.PackagesRepository;
 
 @Service
-public class PackageAddOnServiceImpl implements PackageAddOnService{
+public class PackageAddOnServiceImpl implements PackageAddOnService{ 
 	@Autowired
 	private PackagesRepository packagesRepository;
 	@Autowired
 	private AddOnsRepository addonsRepository;
-
+ 
 	@Override
 	public Packages addPackage(String packageDeal, double price) {
 		// TODO Auto-generated method stub
@@ -28,7 +28,7 @@ public class PackageAddOnServiceImpl implements PackageAddOnService{
 			}
 		}
 		Packages pp = new Packages();
-		pp.setPackageName(packageDeal);
+		pp.setPackageName(packageDeal);  
 		pp.setPrice(price);
 		packagesRepository.save(pp);
 		return pp;
@@ -71,15 +71,17 @@ public class PackageAddOnServiceImpl implements PackageAddOnService{
 
 	@Override
 	public List<Packages> viewPackages() {
-		List<Packages> list = packagesRepository.findAll();
-		if(list==null) throw new PackageAndAddOnException("Empty List!");
+		List<Packages> list = null;
+		list = packagesRepository.findAll();
+		if(list.isEmpty()) throw new PackageAndAddOnException("Empty List!");
 		return list;
 	}
 
 	@Override
 	public List<AddOns> viewAddOns() {
-		List<AddOns> list = addonsRepository.findAll();
-		if(list==null) throw new PackageAndAddOnException("Empty List!");
+		List<AddOns> list = null;
+		list = addonsRepository.findAll();
+		if(list.isEmpty()) throw new PackageAndAddOnException("Empty List!");
 		return list;
 	}
 

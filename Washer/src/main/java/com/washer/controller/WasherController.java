@@ -40,11 +40,11 @@ public class WasherController {
 	public ResponseEntity<?> updateWasher(@PathVariable String phoneNumber,@RequestBody Washer washer){
 		Washer w = null;
 		try {
-		w = washerService.updateWasher(phoneNumber,washer);
-		}catch(InvalidDetailsException  e) {
-			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		w = washerService.updateWasher(phoneNumber,washer); 
+		}catch(InvalidDetailsException  e) { 
+			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST); 
 		}
-		return new ResponseEntity<>(w,HttpStatus.OK);
+		return new ResponseEntity<>(w,HttpStatus.OK); 
 	}
 	
 	

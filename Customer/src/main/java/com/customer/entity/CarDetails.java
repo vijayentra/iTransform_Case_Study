@@ -47,7 +47,19 @@ public class CarDetails {
 	public void setNumberPlate(String numberPlate) {
 		this.numberPlate = numberPlate;
 	}
-	
+	public CarDetails(String brand, String model, String colour, String mfgYear, String lengthInMM,
+			String numberPlate) {
+		super();
+		this.brand = brand;
+		this.model = model;
+		this.colour = colour;
+		this.mfgYear = mfgYear;
+		this.lengthInMM = lengthInMM;
+		this.numberPlate = numberPlate;
+	}
+	public CarDetails() {
+		
+	}
 	
 	
 }

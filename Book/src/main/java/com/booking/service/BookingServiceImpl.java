@@ -29,7 +29,7 @@ import com.booking.repository.BookingRepository;
 import com.booking.repository.PackagesRepository;
 
 @Service
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService{ 
 	@Autowired
 	private BookingRepository bookingRepository;
 	@Autowired
@@ -44,19 +44,19 @@ public class BookingServiceImpl implements BookingService{
 	private static final int wPort = 8086;
 
 	@Override
-	public BookingDetails bookWash(long phoneNumber, BookingDetails bookingDetails) {
+	public BookingDetails bookWash(String phoneNumber, BookingDetails bookingDetails) {
 		List<BookingDetails> history = bookingRepository.findAll();
 		Customer cust = rest.getForObject
 				("http://localhost:"+cPort+"/customer/viewCustomer/"+phoneNumber, Customer.class);
 		int n = 0;
 		for(CarDetails c : cust.getCarsList()) {
-			if(c.getNumberPlate().equals(bookingDetails.getCarNumber())) {
+			if(c.getNumberPlate().equals(bookingDetails.getCarNumber())) {  
 				n=1;
 				break;
 			}
 		}
 		if(n==0) throw new BookingException("Car does not exist. ");
-		
+		 
 		//setting up the booking date and time
 		LocalDateTime localDateTime = LocalDateTime.now();
         // Convert it to IST (Indian Standard Time)
@@ -90,7 +90,7 @@ public class BookingServiceImpl implements BookingService{
 			
 		
 		
-		for(Washer w : washerList) {
+		for(Washer w : washerList) { 
 			int count = 0;
 			for(BookingDetails detail : history) {
 				if(detail.getWasherPhoneNumber().equals(w.getPhoneNumber())) {
@@ -119,11 +119,11 @@ public class BookingServiceImpl implements BookingService{
 					if(a==null) msg = msg + "Invalid addOn: "+s+ ".\n";
 				}
 				if(msg!="") throw new BookingException(msg);
-				return bookingRepository.save(bookingDetails);
+				return bookingRepository.save(bookingDetails); 
 			}
 			
-		}
-		throw new BookingException("No washer available at the given time slot. Sorry for the inconvenience. ");
+		} 
+		throw new BookingException("No washer available at the given time slot. Sorry for the inconvenience. "); 
 	}
 
 	@Override
@@ -210,8 +210,8 @@ public class BookingServiceImpl implements BookingService{
 			b.setWashStatus("DECLINED");
 			b.setBookingId(b.getBookingId()+"#");
 		}
-		bookingRepository.save(b);
-		return b;
+		bookingRepository.save(b); 
+		return b; 
 	}
 
 	@Override
@@ -261,7 +261,7 @@ public class BookingServiceImpl implements BookingService{
 			AddOns a = addonsRepository.findByAddOnName(s);
 			amount+=a.getPrice();
 		}
-		
+		 
 		inv.setBill_Amount(amount);
 		inv.setBookingId(bookingId);
 		inv.setWash_package(b.getWashPackage());
@@ -274,7 +274,6 @@ public class BookingServiceImpl implements BookingService{
 	@Override
 	public BookingDetails rateWasher(String bookingId, int rating) {
 		BookingDetails b = bookingRepository.findByBookingId(bookingId);
-//		BookingDetails b = bh.getBookingDetails();
 		if(b.getWasherRatingGiven()!=0) throw new BookingException("Rating given already. ");
 		if(!b.getWashStatus().equals("COMPLETED")) throw new BookingException("Rate after the car wash is completed. ");
 		b.setWasherRatingGiven(rating);
@@ -295,10 +294,10 @@ public class BookingServiceImpl implements BookingService{
 		for(BookingDetails bd : bookingRepository.findAll()) {
 			if(bd.getWasherPhoneNumber().equals(w.getPhoneNumber())) {
 				bd.setWasherRating(w.getRating());
-				bookingRepository.save(bd);
+				bookingRepository.save(bd); 
 			}
 		}
-		bookingRepository.save(b);
+		bookingRepository.save(b); 
 		return b;
 	}
 
@@ -306,14 +305,15 @@ public class BookingServiceImpl implements BookingService{
 	public BookingDetails viewBookingDetails(String bookingId) {
 		BookingDetails b=null;
 		b = bookingRepository.findByBookingId(bookingId);
+		if(b == null) throw new BookingException("Booking does not exist.");
 		return b;
 	}
 
 	@Override
 	public InvoiceDetails viewInvoiceDetails(String bookingId) {
 		BookingDetails b = bookingRepository.findByInvoice_BookingId(bookingId);
-		if(b == null) throw new BookingException("Invoice does not exist for the given bookingId. ");
-		InvoiceDetails inv = b.getInvoice();
+		if(b == null) throw new BookingException("Invoice does not exist for the given bookingId.");
+		InvoiceDetails inv = b.getInvoice(); 
 		return inv;
 	}
 
@@ -321,7 +321,7 @@ public class BookingServiceImpl implements BookingService{
 	public List<BookingDetails> viewCustomerHistory(String phoneNumber) {
 		List<BookingDetails> list = null;
 		list = bookingRepository.findByCustomerPhoneNumber(phoneNumber);
-		if(list == null) throw new BookingException("Customer has no wash history. ");
+		if(list.isEmpty()) throw new BookingException("Customer has no wash history. ");
 		return list;
 	}
 
@@ -329,7 +329,7 @@ public class BookingServiceImpl implements BookingService{
 	public List<BookingDetails> viewWasherHistory(String phoneNumber) {
 		List<BookingDetails> list = null;
 		list = bookingRepository.findByWasherPhoneNumber(phoneNumber);
-		if(list == null) throw new BookingException("Washer has no wash history. ");
+		if(list.isEmpty()) throw new BookingException("Washer has no wash history. ");
 		return list;
 	}
 
@@ -337,7 +337,7 @@ public class BookingServiceImpl implements BookingService{
 	public List<BookingDetails> viewBookingHistory() {
 		List<BookingDetails> list = null;
 		list = bookingRepository.findAll();
-		if(list == null) throw new BookingException("No history of car washes. ");
+		if(list.isEmpty()) throw new BookingException("No history of car washes. ");
 		return list;
 	}
 

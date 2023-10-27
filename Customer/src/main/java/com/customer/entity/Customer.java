@@ -75,5 +75,20 @@ public class Customer {
 	public void setWashesDone(int washesDone) {
 		this.washesDone = washesDone;
 	}
+//	public Customer(String phoneNumber, String password, String firstName, String lastName, String pinCode,
+//			List<CarDetails> carsList, double rating, int washesDone) {
+//		super();
+//		this.phoneNumber = phoneNumber;
+//		this.password = password;
+//		this.firstName = firstName;
+//		this.lastName = lastName;
+//		this.pinCode = pinCode;
+//		this.carsList = carsList;
+//		this.rating = rating;
+//		this.washesDone = washesDone;
+//	}
+//	public Customer() {
+//		
+//	}
 	
 }

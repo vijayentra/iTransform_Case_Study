@@ -30,79 +30,32 @@ public class WasherServiceImpl implements WasherService{
 	private static final int bPort = 8082;
 
 	@Override
-	public Washer addWasher(Washer washer) {
+	public Washer addWasher(Washer washer) { 
 		List<Washer> list = washerRepository.findAll();
 		for(Washer w : list) {
 			if(w.getPhoneNumber().equals(washer.getPhoneNumber())) {
 				throw new InvalidDetailsException(
-						"Washer already exists for this phone number. ");
+						"Washer already exists with this phone number. ");
 			}
 		}
 		
-		String msg = "";
-		
-		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
-		Pattern nameP = Pattern.compile(nameRegex);
-		Matcher m1 = nameP.matcher(washer.getFirstName());
-		if(!m1.matches()) msg = msg + "Invalid first name.\n";
-		Matcher m2 = nameP.matcher(washer.getLastName());
-		if(!m2.matches()) msg = msg + "Invalid last name.\n";
-		
-		String numberRegex = "^[6-9]{1}[0-9]{9}$";
-		Pattern numberP = Pattern.compile(numberRegex);
-		Matcher m3 = numberP.matcher(washer.getPhoneNumber());
-		if(!m3.matches()) msg = msg+"Invalid phone number.\n";
-		
-		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
-		Pattern passP = Pattern.compile(passRegex);
-		Matcher m8 = passP.matcher(washer.getPassword());
-		if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
-		int a = 0;
-		try {
-			a = Integer.parseInt(washer.getAge());
-			if(a<18) msg = msg + "Age can't be below 18. ";
-		}catch(NumberFormatException e) {
-			msg = msg + "Invalid age. ";
-		}
-		if(msg.equals("")) {
 			return washerRepository.save(washer);
-		}
-		throw new InvalidDetailsException(msg);
 	}
 
 	@Override
 	public Washer updateWasher(String phoneNumber, Washer washer) 
 	{
 		Washer w = washerRepository.findByPhoneNumber(phoneNumber).
-				orElseThrow(()-> new InvalidDetailsException("Washer does not exist."));
-		String msg = "";
-		
-		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
-		Pattern nameP = Pattern.compile(nameRegex);
-		Matcher m1 = nameP.matcher(washer.getFirstName());
-		if(!m1.matches()) msg = msg + "Invalid first name.\n";
-		Matcher m2 = nameP.matcher(washer.getLastName());
-		if(!m2.matches()) msg = msg + "Invalid last name.\n";
-		
-		String numberRegex = "^[6-9]{1}[0-9]{9}$";
-		Pattern numberP = Pattern.compile(numberRegex);
-		Matcher m3 = numberP.matcher(washer.getPhoneNumber());
-		if(!m3.matches()) msg = msg+"Invalid phone number.\n";
-		
-		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
-		Pattern passP = Pattern.compile(passRegex);
-		Matcher m8 = passP.matcher(washer.getPassword());
-		if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
-		int a = 0;
-		try {
-			a = Integer.parseInt(washer.getAge());
-			if(a<18) msg = msg + "Age can't be below 18. ";
-		}catch(NumberFormatException e) {
-			msg = msg + "Invalid age. ";
+				orElseThrow(()-> new InvalidDetailsException("Washer does not exist. "));
+		for(Washer ww : washerRepository.findAll()) {
+			if(ww.getPhoneNumber().equals(washer.getPhoneNumber())) {
+				throw new InvalidDetailsException(
+						"Washer already exists with this phone number. ");
+			}
 		}
-		if(msg.equals("")) {
+		
 			/////updating the change into the history
-			List<BookingDetails> list = null;
+			List<BookingDetails> list = null; 
 			ResponseEntity<List<BookingDetails>> response = rest.exchange(
 				    "http://localhost:"+bPort+"/booking/viewBookingHistory",
 				    HttpMethod.GET,
@@ -139,16 +92,13 @@ public class WasherServiceImpl implements WasherService{
 			w.setFirstName(washer.getFirstName());
 			w.setLastName(washer.getLastName());
 			w.setPassword(washer.getPassword());
-			w.setPhoneNumber(washer.getPhoneNumber());
+			w.setPhoneNumber(washer.getPhoneNumber()); 
 			w.setAge(washer.getAge());
 			return washerRepository.save(w);
-		}
-		throw new InvalidDetailsException(msg);
 	}
 
 	@Override
 	public void deleteWasher(String phoneNumber) {
-		// TODO Auto-generated method stub
 		Washer w = washerRepository.findByPhoneNumber(phoneNumber).
 				orElseThrow(()-> new InvalidDetailsException("Washer does not exist."));
 		washerRepository.delete(w);
@@ -178,5 +128,5 @@ public class WasherServiceImpl implements WasherService{
 		w.setWashesDone(w.getWashesDone()+1);
 		return washerRepository.save(w);
 	}
-
+	
 }

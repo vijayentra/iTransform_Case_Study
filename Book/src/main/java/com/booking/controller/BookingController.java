@@ -22,19 +22,15 @@ import com.booking.entity.InvoiceDetails;
 import com.booking.exception.BookingException;
 import com.booking.service.BookingService;
 
-//import io.swagger.annotations.Api;
-//import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/booking")
-//@Api
-public class BookingController {
+public class BookingController {  
 	@Autowired
 	private BookingService bookingService;
 	
 	@PostMapping("/bookWash/{phoneNumber}")
-//	@ApiOperation("Book a car wash")
-	public ResponseEntity<?> bookWash(@PathVariable Long phoneNumber, @RequestBody BookingDetails bookingDetails){
+	public ResponseEntity<?> bookWash(@PathVariable String phoneNumber, @RequestBody BookingDetails bookingDetails){
 		BookingDetails b = null;
 		try {
 		b = bookingService.bookWash(phoneNumber, bookingDetails);
@@ -42,11 +38,10 @@ public class BookingController {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(b,HttpStatus.OK); 
+		return new ResponseEntity<>(b,HttpStatus.OK);  
 	}
 	
 	@PutMapping("/rescheduleWash/{bookingId}")
-//	@ApiOperation("Reschedule a car wash")
 	public ResponseEntity<?> rescheduleWash(@PathVariable String bookingId,@RequestBody DateTime rescheduleRequest){
 		BookingDetails b = null;
 		try {
@@ -59,7 +54,6 @@ public class BookingController {
 	}
 	
 	@PutMapping("/cancelWash/{bookingId}")
-//	@ApiOperation("Cancel a wash")
 	public ResponseEntity<?> cancelWash(@PathVariable String bookingId){
 		BookingDetails b = null;
 		try {
@@ -72,7 +66,6 @@ public class BookingController {
 	}
 	
 	@PutMapping("/respondWash/{bookingId}")
-//	@ApiOperation("Respond to a wash request")
 	public ResponseEntity<?> respondWash(@PathVariable String bookingId, @RequestBody Response respondRequest){
 		BookingDetails b = null;
 		try {
@@ -85,7 +78,6 @@ public class BookingController {
 	}
 	
 	@PutMapping("/washComplete/{bookingId}")
-//	@ApiOperation("Wash Completed")
 	public ResponseEntity<?> washComplete(@PathVariable String bookingId, @RequestBody Rating washCompleteRequest){
 	BookingDetails b = null;
 		try {
@@ -98,7 +90,6 @@ public class BookingController {
 	}
 	
 	@PutMapping("/rateWasher/{bookingId}")
-//	@ApiOperation("Rate the Washer")
 	public ResponseEntity<?> rateWasher(@PathVariable String bookingId,@RequestBody Rating rateWasherRequest){
 	BookingDetails b = null;
 		try {
@@ -111,7 +102,6 @@ public class BookingController {
 	}
 	
 	@GetMapping("/viewBookingDetails/{bookingId}")
-//	@ApiOperation("View Booking details")
 	public ResponseEntity<?> viewBookingDetails(@PathVariable String bookingId){
 	BookingDetails b = null;
 		try {
@@ -124,7 +114,6 @@ public class BookingController {
 	}
 	
 	@GetMapping("/viewInvoiceDetails/{bookingId}")
-//	@ApiOperation("View invoice details")
 	public ResponseEntity<?> viewInvoiceDetails(@PathVariable String bookingId){
 	InvoiceDetails Inv = null;
 		try {
@@ -137,7 +126,6 @@ public class BookingController {
 	}
 	
 	@GetMapping("/viewCustomerHistory/{phoneNumber}")
-//	@ApiOperation("View Customer History")
 	public ResponseEntity<?> viewCustomerHistory(@PathVariable String phoneNumber){
 	List<BookingDetails> list = null;
 		try {
@@ -149,8 +137,9 @@ public class BookingController {
 		return new ResponseEntity<>(list,HttpStatus.OK); 
 	}
 	
+	
+	
 	@GetMapping("/viewWasherHistory/{phoneNumber}")
-//	@ApiOperation("View Washer History")
 	public ResponseEntity<?> viewWasherHistory(@PathVariable String phoneNumber){
 	List<BookingDetails> list = null;
 		try {
@@ -163,7 +152,6 @@ public class BookingController {
 	}
 	
 	@GetMapping("/viewBookingHistory")
-//	@ApiOperation("View Booking History")
 	public ResponseEntity<?> viewBookingHistory(){
 	List<BookingDetails> list = null;
 		try {
@@ -176,7 +164,6 @@ public class BookingController {
 	}
 	
 	@PutMapping("/updateWasherDetails/{oldPhoneNumber}/{washerName}/{phoneNumber}")
-//	@ApiOperation("Update washer details")
 	public ResponseEntity<?> updateWasherDetails(@PathVariable String oldPhoneNumber, @PathVariable String washerName,
 												@PathVariable String phoneNumber){
 		try {
@@ -188,7 +175,6 @@ public class BookingController {
 		return new ResponseEntity<>("updated!",HttpStatus.OK); 
 	}
 	
-//	@ApiOperation("Update customer details")
 	@PutMapping("/updateCustomerDetails/{oldPhoneNumber}/{customerName}/{phoneNumber}")
 	public ResponseEntity<?> updateCustomerDetails(@PathVariable String oldPhoneNumber, @PathVariable String customerName,
 												@PathVariable String phoneNumber){

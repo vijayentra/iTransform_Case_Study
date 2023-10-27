@@ -9,7 +9,7 @@ import com.booking.entity.InvoiceDetails;
 
 public interface BookingService {
 		
-	public BookingDetails bookWash(long phoneNumber,BookingDetails bookingDetails);
+	public BookingDetails bookWash(String phoneNumber,BookingDetails bookingDetails);
 	public BookingDetails rescheduleWash(String bookingId, String washdate, String washTime);
 	public BookingDetails cancelWash(String bookingId);
 	public BookingDetails respondWash(String bookingId, String response);

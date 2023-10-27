@@ -1,10 +1,10 @@
-package com.config.admin;
+package com.washer.applicationtest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AdminApplicationTests {
+class WasherApplicationTests {
 
 	@Test
 	void contextLoads() {

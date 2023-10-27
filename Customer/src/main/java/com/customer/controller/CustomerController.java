@@ -106,7 +106,7 @@ public class CustomerController {
 		try {
 			cus = customerService.viewCustomer(phoneNumber);
 		}catch(InvalidDetailsException e) {
-			return new ResponseEntity<>(e.getMessage() + "Try again! ", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage() + "Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(cus,HttpStatus.OK);
 	}
@@ -118,7 +118,7 @@ public class CustomerController {
 		try {
 			list = customerService.viewAllCustomer();
 		}catch(InvalidDetailsException e) {
-			return new ResponseEntity<>(e.getMessage() + "Try again! ", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage() + "Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}
@@ -130,7 +130,7 @@ public class CustomerController {
 		try {
 			car = customerService.viewCarDetails(phoneNumber, plateNumber);
 		}catch(InvalidDetailsException e) {
-			return new ResponseEntity<>(e.getMessage()+ "Try Again!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage()+ "Please try Again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(car,HttpStatus.OK);
 	}
@@ -142,7 +142,7 @@ public class CustomerController {
 		try {
 			list = customerService.viewAllCarDetails(phoneNumber);
 		}catch(InvalidDetailsException e) {
-			return new ResponseEntity<>(e.getMessage() + "Try again! ", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(e.getMessage() + "Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(list,HttpStatus.OK);
 	}

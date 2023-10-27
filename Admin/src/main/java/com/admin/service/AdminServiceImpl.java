@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public void deleteAdmin(String userName) {
+	public void deleteAdmin(String userName) { 
 		AdminDetails ad = adminRepository.findByUsername(userName);
 		if(ad==null) throw new InvalidAdminException("Admin does not exist. ");
 		adminRepository.delete(ad);
@@ -96,7 +96,7 @@ public class AdminServiceImpl implements AdminService{
 			);
 
 			if (response.getStatusCode()==HttpStatus.OK) {
-			    customerList = response.getBody();
+			    customerList = response.getBody(); 
 			}
 			
 		for(Customer c : customerList) {
@@ -145,7 +145,7 @@ public class AdminServiceImpl implements AdminService{
 	}
 
 	@Override
-	public List<HistoryOfBookings> viewBookingHistory() {
+	public List<HistoryOfBookings> viewBookingHistory() { 
 		historyRepository.deleteAll();
 		historyRepository.resetAutoIncrementValue();
 		List<BookingDetails> list = null;
@@ -163,7 +163,7 @@ public class AdminServiceImpl implements AdminService{
 			HistoryOfBookings h = new HistoryOfBookings(bd.getBookingDateAndTime(),bd.getBookingId(),
 					bd.getCustomerName(),bd.getCustomerPhoneNumber(),bd.getCustomerRatingGiven(),bd.getWasherName(),
 					bd.getWasherPhoneNumber(),bd.getWasherRatingGiven(),bd.getWashStatus());
-			historyRepository.save(h);
+			historyRepository.save(h); 
 		}
 		List<HistoryOfBookings> res = historyRepository.findAll();
 		if(res==null) throw new InvalidAdminException("No history of bookings. ");

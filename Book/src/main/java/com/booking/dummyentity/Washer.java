@@ -1,9 +1,5 @@
 package com.booking.dummyentity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 public class Washer {
 	private String id;
 	private String phoneNumber;
@@ -12,7 +8,7 @@ public class Washer {
 	private String lastName;
 	private String age;
 	private double rating = 0.0;
-	private List<String> washList = new ArrayList<>();
+	private int washesDone=0;
 	
 	public String getPhoneNumber() {
 		return phoneNumber;
@@ -50,16 +46,16 @@ public class Washer {
 	public void setRating(double rating) {
 		this.rating = rating;
 	}
-	public List<String> getWashList() {
-		return washList;
-	}
-	public void setWashList(List<String> washList) {
-		this.washList = washList;
-	}
 	public String getId() {
 		return id;
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public int getWashesDone() {
+		return washesDone;
+	}
+	public void setWashesDone(int washesDone) {
+		this.washesDone = washesDone;
 	}
 }

@@ -1,10 +1,10 @@
-package carwash.customer.application;
+package com.config.ApiGateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CustomerApplicationTests {
+class ApiGatewayApplicationTests {
 
 	@Test
 	void contextLoads() {

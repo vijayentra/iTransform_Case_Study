@@ -32,32 +32,14 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public Customer updateCustomer(String phoneNumber,Customer customer) throws InvalidDetailsException{
 			Customer c = customerRepository.findByPhoneNumber(phoneNumber).
-					orElseThrow(()->new InvalidDetailsException("Customer does not exist. "));
-				String msg = "";
-				
-				String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
-				Pattern nameP = Pattern.compile(nameRegex);
-				Matcher m1 = nameP.matcher(customer.getFirstName());
-				if(!m1.matches()) msg = msg + "Invalid first name.\n";
-				Matcher m2 = nameP.matcher(customer.getLastName());
-				if(!m2.matches()) msg = msg + "Invalid last name.\n";
-				
-				String numberRegex = "^[6-9]{1}[0-9]{9}$";
-				Pattern numberP = Pattern.compile(numberRegex);
-				Matcher m3 = numberP.matcher(customer.getPhoneNumber());
-				if(!m3.matches()) msg = msg+"Invalid phone number.\n";
-				
-				String pinRegex = "^400[0-9]{3}$";
-				Pattern pinP = Pattern.compile(pinRegex);
-				Matcher m4 = pinP.matcher(customer.getPinCode());
-				if(!m4.matches()) msg = msg+ "Invalid pin-code.\n";
-				
-				String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
-				Pattern passP = Pattern.compile(passRegex);
-				Matcher m8 = passP.matcher(customer.getPassword());
-				if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
-				
-				if(msg.equals("")) {
+					orElseThrow(()->new InvalidDetailsException("Customer does not exist. ")); 
+			for(Customer cus : customerRepository.findAll()) {
+				if(customer.getPhoneNumber().equals(cus.getPhoneNumber())) {
+					throw new InvalidDetailsException("Customer already exists with this phone number. ");
+				}
+			}
+			
+			//UPDATING THE UPDATED DETAILS TO THE BOOKING DETAILS HISTORY
 					List<BookingDetails> list = null;
 					ResponseEntity<List<BookingDetails>> response = rest.exchange(
 						    "http://localhost:"+bPort+"/booking/viewBookingHistory",
@@ -75,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
 							String url = "http://localhost:"+bPort+"/booking/updateCustomerDetails/{oldPhoneNumber}/{customerName}/{phoneNumber}";
 
 							// Set up the URL parameters
-							Map<String, String> urlParams = new HashMap<>();
+							Map<String, String> urlParams = new HashMap<>();  
 							urlParams.put("oldPhoneNumber", phoneNumber);
 							urlParams.put("customerName", name);
 							urlParams.put("phoneNumber", customer.getPhoneNumber());
@@ -96,61 +78,36 @@ public class CustomerServiceImpl implements CustomerService {
 					c.setPassword(customer.getPassword());
 					c.setPinCode(customer.getPinCode());
 					return customerRepository.save(c);
-				}
-		throw new InvalidDetailsException(msg);
 	}
 
 	@Override
 	public CarDetails updateCarDetails(String phoneNumber, String plateNumber, CarDetails carDetails)
 							throws InvalidDetailsException{
-		List<Customer> list = customerRepository.findAll();
-		String msg = "";
-		for(Customer c : list) {
-			if(c.getPhoneNumber().equals(phoneNumber)) {
-				for(CarDetails car : c.getCarsList()) {
+		
+		Customer cus = customerRepository.findByPhoneNumber(phoneNumber).
+				orElseThrow(()->new InvalidDetailsException("Customer does not exist. "));
+			for(CarDetails car : cus.getCarsList()) {
 					if(plateNumber.equals(car.getNumberPlate())) {
-						String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
-						Pattern carP = Pattern.compile(numRegex);
-						Matcher m5 = carP.matcher(carDetails.getNumberPlate());
-						if(!m5.matches()) msg = msg + "Check car number plate: "+carDetails.getNumberPlate()+".\n";
-						
-						String yearRegex = "^20(0[8-9]|1[0-9])|20[0-2][0-3]$";
-						Pattern yearP = Pattern.compile(yearRegex);
-						Matcher m6 = yearP.matcher(carDetails.getMfgYear());
-						if(!m6.matches()) msg = msg + "Invalid manufacturing year.\n";
-						
-						String lenRegex = "^[2-5]{1}[0-9]{3}";
-						Pattern lenP = Pattern.compile(lenRegex);
-						Matcher m7 = lenP.matcher(carDetails.getLengthInMM());
-						if(!m7.matches()) msg = msg + "Car length not within wash limit.\n";
-					
-						if(msg.equals("")) {
-							car.setBrand(carDetails.getBrand());
-							car.setColour(carDetails.getColour());
-							car.setModel(carDetails.getModel());
-							car.setLengthInMM(carDetails.getLengthInMM());
-							car.setMfgYear(carDetails.getMfgYear());
-							car.setNumberPlate(carDetails.getNumberPlate());
-							int num=0;
-							for(CarDetails cc : c.getCarsList()) {
-								if(carDetails.getNumberPlate().equals(cc.getNumberPlate())) {
-								num+=1;
-								}
+						car.setBrand(carDetails.getBrand());
+						car.setColour(carDetails.getColour());
+						car.setModel(carDetails.getModel());
+						car.setLengthInMM(carDetails.getLengthInMM());
+						car.setMfgYear(carDetails.getMfgYear());
+						car.setNumberPlate(carDetails.getNumberPlate());
+						int num=0;
+						for(CarDetails cc : cus.getCarsList()) {
+							if(carDetails.getNumberPlate().equals(cc.getNumberPlate())) {
+							num+=1;
 							}
-							if(num>1) {
-								throw new InvalidDetailsException("Multiple cars cannot have same number plate.");
-							}
-							customerRepository.save(c);
-							return carDetails;
 						}
-						else
-							throw new InvalidDetailsException(msg);
-					}
-				}
-				throw new InvalidDetailsException("Car does not exist. Check the car number.");
+						if(num>1) {
+							throw new InvalidDetailsException("Multiple cars cannot have same number plate.");
+						}
+						customerRepository.save(cus);
+						return carDetails;
+				}	
 			}
-		}
-		throw new InvalidDetailsException("Customer does not exist. Check the customer phone number.");
+			throw new InvalidDetailsException("Car does not exist. Check the car number.");
 	}
 
 	@Override
@@ -162,62 +119,7 @@ public class CustomerServiceImpl implements CustomerService {
 						"Customer already exists for this phone number. ");
 			}
 		}
-		
-		String msg = "";
-		
-		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
-		Pattern nameP = Pattern.compile(nameRegex);
-		Matcher m1 = nameP.matcher(customer.getFirstName());
-		if(!m1.matches()) msg = msg + "Invalid first name.\n";
-		Matcher m2 = nameP.matcher(customer.getLastName());
-		if(!m2.matches()) msg = msg + "Invalid last name.\n";
-		
-		String numberRegex = "^[6-9]{1}[0-9]{9}$";
-		Pattern numberP = Pattern.compile(numberRegex);
-		Matcher m3 = numberP.matcher(customer.getPhoneNumber());
-		if(!m3.matches()) msg = msg+"Invalid phone number.\n";
-		
-		String pinRegex = "^400[0-9]{3}$";
-		Pattern pinP = Pattern.compile(pinRegex);
-		Matcher m4 = pinP.matcher(customer.getPinCode());
-		if(!m4.matches()) msg = msg+ "Invalid pin-code.\n";
-		
-		for(CarDetails car : customer.getCarsList()) {
-			int num=0;
-			for(CarDetails c : customer.getCarsList()) {
-				if(car.getNumberPlate().equals(c.getNumberPlate())) {
-					num+=1;
-				}
-			}
-			if(num>1) {
-				msg = msg + "Multiple cars cannot have same number plate.\n";
-				break;
-			}
-			String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
-			Pattern carP = Pattern.compile(numRegex);
-			Matcher m5 = carP.matcher(car.getNumberPlate());
-			if(!m5.matches()) msg = msg + "Check car number plate: "+car.getNumberPlate()+".\n";
-			
-			String yearRegex = "^20(0[8-9]|1[0-9])|20[0-2][0-3]$";
-			Pattern yearP = Pattern.compile(yearRegex);
-			Matcher m6 = yearP.matcher(car.getMfgYear());
-			if(!m6.matches()) msg = msg + "Invalid manufacturing year for "+car.getNumberPlate() + ".\n";
-			
-			String lenRegex = "^[2-5]{1}[0-9]{3}";
-			Pattern lenP = Pattern.compile(lenRegex);
-			Matcher m7 = lenP.matcher(car.getLengthInMM());
-			if(!m7.matches()) msg = msg + "Car length not within wash limit for "+ car.getNumberPlate()+".\n";
-		}
-		
-		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
-		Pattern passP = Pattern.compile(passRegex);
-		Matcher m8 = passP.matcher(customer.getPassword());
-		if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
-		
-		if(msg.equals("")) {
-			return customerRepository.save(customer);
-		}
-		throw new InvalidDetailsException(msg);
+		return customerRepository.save(customer);
 	}
 
 	@Override
@@ -225,7 +127,6 @@ public class CustomerServiceImpl implements CustomerService {
 			Customer customer = customerRepository.findByPhoneNumber(phoneNumber).
 					orElseThrow(()-> new InvalidDetailsException("Customer does not exist."));
 	        
-			String msg = "";
 			int num=0;
 			for(CarDetails car : customer.getCarsList()) {
 				if(carDetails.getNumberPlate().equals(car.getNumberPlate())) {
@@ -233,30 +134,12 @@ public class CustomerServiceImpl implements CustomerService {
 				}
 			}
 			if(num>0) {
-				msg = msg + "Multiple cars cannot have same number plate.\n";
-				throw new InvalidDetailsException(msg);
+				throw new InvalidDetailsException("Multiple cars cannot have same number plate.");
 			}
-			String numRegex = "^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$";
-			Pattern carP = Pattern.compile(numRegex);
-			Matcher m5 = carP.matcher(carDetails.getNumberPlate());
-			if(!m5.matches()) msg = msg + "Check car number plate: "+carDetails.getNumberPlate()+".\n";
-			
-			String yearRegex = "^20(0[8-9]|1[0-9])|20[0-2][0-3]$";
-			Pattern yearP = Pattern.compile(yearRegex);
-			Matcher m6 = yearP.matcher(carDetails.getMfgYear());
-			if(!m6.matches()) msg = msg + "Invalid manufacturing year.\n";
-			
-			String lenRegex = "^[2-5]{1}[0-9]{3}";
-			Pattern lenP = Pattern.compile(lenRegex);
-			Matcher m7 = lenP.matcher(carDetails.getLengthInMM());
-			if(!m7.matches()) msg = msg + "Car length not within wash limit.\n";
 		
-			if(msg.equals("")) {
-				customer.getCarsList().add(carDetails);
-				customerRepository.save(customer);
-				return carDetails;
-			}
-			throw new InvalidDetailsException(msg);
+			customer.getCarsList().add(carDetails);
+			customerRepository.save(customer);
+			return carDetails;
 		}
 
 	@Override
@@ -273,7 +156,6 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public void deleteCarDetails(String phoneNumber, String numberPlate) {
-//		Customer cus = customerRepository.findById(phoneNumber).orElseThrow(()-> new InvalidDetailsException("invalid phone"));
 		List<Customer> list = customerRepository.findAll();
 		for(Customer c: list) {
 			if(c.getPhoneNumber().equals(phoneNumber)) {
