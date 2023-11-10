@@ -11,4 +11,5 @@ public interface WasherRepository extends MongoRepository<Washer, String>{
 
 	Optional<Washer> findByPhoneNumber(String phoneNumber);
 	Washer deleteByPhoneNumber(String phoneNumber);
+	Optional<Washer> findByPhoneNumberAndPassword(String phoneNumber, String password);
 }

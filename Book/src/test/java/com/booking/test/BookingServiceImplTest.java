@@ -63,7 +63,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
 
         // Call the cancelWash method
-        String bookingId = "12345"; // Replace with a valid booking ID
+        String bookingId = "12345"; 
         BookingDetails result = bookingService.cancelWash(bookingId);
 
         // Assertions
@@ -78,7 +78,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(null);
 
         // Call the cancelWash method with a non-existent booking ID
-        String bookingId = "nonExistentBooking"; // Replace with a non-existent booking ID
+        String bookingId = "nonExistentBooking"; 
         
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.cancelWash(bookingId)); 
@@ -93,7 +93,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
 
         // Call the respondWash method with "ACCEPT" response
-        String bookingId = "12345"; // Replace with a valid booking ID
+        String bookingId = "12345"; 
         BookingDetails result = bookingService.respondWash(bookingId, "ACCEPT");
 
         // Assertions
@@ -108,7 +108,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
 
         // Call the respondWash method with "DECLINE" response
-        String bookingId = "12345"; // Replace with a valid booking ID
+        String bookingId = "12345"; 
         BookingDetails result = bookingService.respondWash(bookingId, "DECLINE");
 
         // Assertions
@@ -123,7 +123,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(null);
 
         // Call the respondWash method with a non-existent booking ID
-        String bookingId = "nonExistentBooking"; // Replace with a non-existent booking ID
+        String bookingId = "nonExistentBooking"; 
         
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.respondWash(bookingId, "ACCEPT"));
@@ -138,8 +138,8 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(null);
 
         // Call the washComplete method with a non-existent booking ID
-        String bookingId = "nonExistentBooking"; // Replace with a non-existent booking ID
-        int rating = 4; // Replace with a valid rating
+        String bookingId = "nonExistentBooking"; 
+        int rating = 4; 
         
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.washComplete(bookingId, rating));
@@ -165,9 +165,9 @@ class BookingServiceImplTest {
     @Test
     public void testRateWasher_RatingGivenAlready() {
         BookingDetails bookingDetails = new BookingDetails();
-        bookingDetails.setWasherRatingGiven(4); // Washer rating already given
+        bookingDetails.setWasherRatingGiven(4); 
         String bookingId = "yourBookingId";
-        int rating = 5; // Set the rating you want to test
+        int rating = 5; 
 
         // Mock the behavior of bookingRepository.findByBookingId
         when(bookingRepository.findByBookingId(bookingId)).thenReturn(bookingDetails);
@@ -181,9 +181,9 @@ class BookingServiceImplTest {
     @Test
     public void testRateWasher_NotCompletedStatus() {
         BookingDetails bookingDetails = new BookingDetails();
-        bookingDetails.setWashStatus("ACCEPTED"); // Not in COMPLETED status
+        bookingDetails.setWashStatus("ACCEPTED"); 
         String bookingId = "yourBookingId";
-        int rating = 5; // Set the rating you want to test
+        int rating = 5; 
 
         // Mock the behavior of bookingRepository.findByBookingId
         when(bookingRepository.findByBookingId(bookingId)).thenReturn(bookingDetails);
@@ -201,7 +201,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
 
         // Call the viewBookingDetails method
-        String bookingId = "12345"; // Replace with a valid booking ID
+        String bookingId = "12345"; 
         BookingDetails result = bookingService.viewBookingDetails(bookingId);
 
         // Assertions
@@ -215,7 +215,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByBookingId(anyString())).thenReturn(null);
 
         // Call the viewBookingDetails method with a non-existent booking ID
-        String bookingId = "nonExistentBooking"; // Replace with a non-existent booking ID
+        String bookingId = "nonExistentBooking"; 
         
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.viewBookingDetails(bookingId));
@@ -232,7 +232,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByInvoice_BookingId(anyString())).thenReturn(mockBooking);
 
         // Call the viewInvoiceDetails method
-        String bookingId = "12345"; // Replace with a valid booking ID
+        String bookingId = "12345"; 
         InvoiceDetails result = bookingService.viewInvoiceDetails(bookingId);
 
         // Assertions
@@ -258,7 +258,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByCustomerPhoneNumber(anyString())).thenReturn(mockHistory);
 
         // Call the viewCustomerHistory method
-        String phoneNumber = "1234567890"; // Replace with a valid phone number
+        String phoneNumber = "1234567890"; 
         List<BookingDetails> result = bookingService.viewCustomerHistory(phoneNumber);
 
         // Assertions
@@ -272,7 +272,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByCustomerPhoneNumber(anyString())).thenReturn(new ArrayList<>());
 
         // Call the viewCustomerHistory method for a customer with no history
-        String phoneNumber = "1234567890"; // Replace with a valid phone number
+        String phoneNumber = "1234567890"; 
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.viewCustomerHistory(phoneNumber));
 
@@ -289,7 +289,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByWasherPhoneNumber(anyString())).thenReturn(mockHistory);
 
         // Call the viewWasherHistory method
-        String phoneNumber = "1234567890"; // Replace with a valid phone number
+        String phoneNumber = "1234567890"; 
         List<BookingDetails> result = bookingService.viewWasherHistory(phoneNumber);
 
         // Assertions
@@ -303,7 +303,7 @@ class BookingServiceImplTest {
         when(bookingRepository.findByWasherPhoneNumber(anyString())).thenReturn(new ArrayList<>());
 
         // Call the viewWasherHistory method for a washer with no history
-        String phoneNumber = "1234567890"; // Replace with a valid phone number
+        String phoneNumber = "1234567890";
         BookingException exception = assertThrows(BookingException.class,
                 () -> bookingService.viewWasherHistory(phoneNumber));
 
@@ -384,7 +384,7 @@ class BookingServiceImplTest {
     public void testWashComplete_Success() {
         // Mock the behavior of bookingRepository.findByBookingId
         BookingDetails mockBooking = new BookingDetails();
-        mockBooking.setWashStatus("ACCEPTED"); // Set an initial status
+        mockBooking.setWashStatus("ACCEPTED");
         mockBooking.setWashPackage("BasicPackage");
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
         
@@ -404,12 +404,12 @@ class BookingServiceImplTest {
 
         // Mock the behavior of packagesRepository.findByPackageName
         Packages mockPackage = new Packages();
-        mockPackage.setPrice(10.0); // Set the package price
+        mockPackage.setPrice(10.0); 
         when(packagesRepository.findByPackageName(anyString())).thenReturn(mockPackage);
 
         // Mock the behavior of addonsRepository.findByAddOnName
         AddOns mockAddon = new AddOns();
-        mockAddon.setPrice(5.0); // Set the add-on price
+        mockAddon.setPrice(5.0); 
         when(addonsRepository.findByAddOnName(anyString())).thenReturn(mockAddon);
 
         BookingDetails result = bookingService.washComplete("booking123", 5);
@@ -426,7 +426,7 @@ class BookingServiceImplTest {
     public void testRateWasher_Success() {
         // Mock the behavior of bookingRepository.findByBookingId
         BookingDetails mockBooking = new BookingDetails();
-        mockBooking.setWashStatus("COMPLETED"); // Set the booking status to COMPLETED
+        mockBooking.setWashStatus("COMPLETED"); 
         when(bookingRepository.findByBookingId(anyString())).thenReturn(mockBooking);
 
         // Mock the behavior of rest.exchange for updating washer rating
@@ -438,7 +438,6 @@ class BookingServiceImplTest {
             eq(String.class)))
         .thenReturn(mockWasherRatingResponse);
 
-        // Mock the behavior of rest.getForObject for getting washer details
         Washer mockWasher = new Washer();
         mockWasher.setRating(5);
         when(restTemplate.getForObject(anyString(), eq(Washer.class))).thenReturn(mockWasher);
@@ -458,10 +457,9 @@ class BookingServiceImplTest {
 
     @Test
     void testBookWash_Success2() {
-        // Mock data
         String phoneNumber = "1234567890";
         BookingDetails bookingDetails = new BookingDetails();
-        bookingDetails.setCarNumber("TN47BV3456"); // Updated car number
+        bookingDetails.setCarNumber("TN47BV3456");
         bookingDetails.setWashDate("2023-09-25");
         bookingDetails.setWashTime("10:00 AM");
         bookingDetails.setWashPackage("Basic");
@@ -472,7 +470,7 @@ class BookingServiceImplTest {
         mockCustomer.setLastName("Doe");
         mockCustomer.setPhoneNumber(phoneNumber);
         CarDetails c = new CarDetails();
-        c.setNumberPlate("TN47BV3456"); // Updated car number
+        c.setNumberPlate("TN47BV3456"); 
         c.setBrand("VW");
         c.setMfgYear("2022");
         List<CarDetails> l = new ArrayList<>();
@@ -485,7 +483,6 @@ class BookingServiceImplTest {
 
         // Mock the behavior of packagesRepository.findByPackageName
         Packages mockPackage = new Packages();
-        mockPackage.setPrice(10.0); // Set the package price
         mockPackage.setPackageName("Basic");
         when(packagesRepository.findByPackageName("Basic")).thenReturn(mockPackage);
 
@@ -527,13 +524,12 @@ class BookingServiceImplTest {
     
     @Test
     void testRescheduleWash_Success() {
-        // Mock data
         String bookingId = "booking123";
         String washDate = "2023-09-26";
         String washTime = "2:00 PM";
 
         BookingDetails existingBooking = new BookingDetails();
-        existingBooking.setWashStatus("REQUESTED"); // Set an initial status
+        existingBooking.setWashStatus("REQUESTED");
 
         // Mock the behavior of bookingRepository.findByBookingId
         when(bookingRepository.findByBookingId(bookingId)).thenReturn(existingBooking);

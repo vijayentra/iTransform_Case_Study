@@ -8,11 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Washer {
 	@Id
 	private String id;
-	private String phoneNumber;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private String age;
+	private String phoneNumber="";
+	private String password="";
+	private String firstName="";
+	private String lastName="";
+	private String age="";
 	private double rating = 0.0;
 	private int washesDone=0;
 	

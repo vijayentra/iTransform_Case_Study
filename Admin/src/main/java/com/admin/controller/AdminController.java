@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +24,23 @@ import com.admin.service.AdminService;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin("*")
 public class AdminController {
 	
 	@Autowired
 	private AdminService adminService;
+	
+	@GetMapping("/loginAdmin/{username}/{password}")
+	public ResponseEntity<?> loginAdmin(@PathVariable String username, @PathVariable String password){
+		AdminDetails ad = null;
+		try {
+		ad = adminService.login(username, password);
+		}catch(InvalidAdminException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(ad ,HttpStatus.OK); 
+	}
 	
 	
 	@PostMapping("/addAdmin")
@@ -50,7 +64,7 @@ public class AdminController {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>("Admin updated successfully. ",HttpStatus.OK); 
+		return new ResponseEntity<>(ad ,HttpStatus.OK); 
 	}
 	
 	@DeleteMapping("/deleteAdmin/{username}")
@@ -64,16 +78,16 @@ public class AdminController {
 		return new ResponseEntity<>("Admin deleted successfully. ",HttpStatus.OK); 
 	}
 	
-	@GetMapping("/viewAdmins")
-	public ResponseEntity<?> viewAdmins(){
-		List<String> list = null;
+	@GetMapping("/viewAdmin/{username}")
+	public ResponseEntity<?> viewAdmin(@PathVariable String username){
+		AdminDetails ad = null;
 		try {
-		list=  adminService.viewAdmins();
+		ad=  adminService.viewAdmin(username);
 		}catch(InvalidAdminException e) {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<>(list,HttpStatus.OK); 
+		return new ResponseEntity<>(ad,HttpStatus.OK); 
 	}
 	
 	@GetMapping("/viewCustomerOverview")

@@ -18,6 +18,7 @@ public interface CustomerService {
 		public void deleteCustomer(String phoneNumber);
 		public void deleteCarDetails(String phoneNumber, String numberPlate);
 		
+		public Customer login(String phoneNumber, String password);
 		public Customer viewCustomer(String phoneNumber);
 		public List<Customer> viewAllCustomer();
 		

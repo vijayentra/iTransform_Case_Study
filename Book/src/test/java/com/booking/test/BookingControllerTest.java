@@ -53,7 +53,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.bookWash is called with the correct arguments
         verify(bookingService, times(1)).bookWash(phoneNumber, request);
@@ -75,7 +74,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (BAD_REQUEST)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.bookWash is called with the correct arguments
         verify(bookingService, times(1)).bookWash(phoneNumber, request);
@@ -98,7 +96,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.rescheduleWash is called with the correct arguments
         verify(bookingService, times(1)).rescheduleWash(bookingId, rescheduleRequest.getWashDate(), rescheduleRequest.getWashTime());
@@ -120,7 +117,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (BAD_REQUEST)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.rescheduleWash is called with the correct arguments
         verify(bookingService, times(1)).rescheduleWash(bookingId, rescheduleRequest.getWashDate(), rescheduleRequest.getWashTime());
@@ -140,7 +136,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.cancelWash is called with the correct argument
         verify(bookingService, times(1)).cancelWash(bookingId);
@@ -159,7 +154,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (BAD_REQUEST)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.cancelWash is called with the correct argument
         verify(bookingService, times(1)).cancelWash(bookingId);
@@ -181,7 +175,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.respondWash is called with the correct arguments
         verify(bookingService, times(1)).respondWash(bookingId, respondRequest.getResponse());
@@ -202,7 +195,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (BAD_REQUEST)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.respondWash is called with the correct arguments
         verify(bookingService, times(1)).respondWash(bookingId, respondRequest.getResponse());
@@ -224,7 +216,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.washComplete is called with the correct arguments
         verify(bookingService, times(1)).washComplete(bookingId, washCompleteRequest.getRating());
@@ -245,7 +236,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (BAD_REQUEST)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.washComplete is called with the correct arguments
         verify(bookingService, times(1)).washComplete(bookingId, washCompleteRequest.getRating());
@@ -268,7 +258,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 200 (OK)
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
 
         // Verify that bookingService.rateWasher is called with the correct arguments
         verify(bookingService, times(1)).rateWasher(bookingId, washerRating);
@@ -290,7 +279,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -323,7 +311,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -393,7 +380,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -430,7 +416,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -461,7 +446,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -493,7 +477,6 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
     
     @Test
@@ -525,6 +508,5 @@ class BookingControllerTest {
 
         // Verify that it returns an HTTP status code of 400 (Bad Request)
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-        // Optionally, verify the response body or message as well
     }
 }

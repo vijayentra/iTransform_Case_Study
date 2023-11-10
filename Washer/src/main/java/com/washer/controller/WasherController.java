@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,9 +21,22 @@ import com.washer.service.WasherService;
 
 @RestController
 @RequestMapping("/washer")
+@CrossOrigin("*")
 public class WasherController {
 	@Autowired
 	private WasherService washerService;
+	
+	@GetMapping("/loginWasher/{phoneNumber}/{password}")
+	public ResponseEntity<?> loginWasher(@PathVariable String phoneNumber,@PathVariable String password){
+		Washer w = null;
+		try {
+		w = washerService.login(phoneNumber, password);
+		}catch(InvalidDetailsException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(w,HttpStatus.OK); 
+	}
 	
 	@PostMapping("/add")
 	public ResponseEntity<?> addWasher(@RequestBody Washer washer){

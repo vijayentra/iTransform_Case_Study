@@ -12,4 +12,5 @@ import com.customer.entity.Customer;
 public interface CustomerRepository extends MongoRepository<Customer, String>{
 	Optional<Customer> findByPhoneNumber(String phoneNumber);
 	Customer deleteByPhoneNumber(String phoneNumber);
+	Optional<Customer> findByPhoneNumberAndPassword(String phoneNumber, String password);
 }

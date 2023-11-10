@@ -39,7 +39,35 @@ public class WasherServiceImpl implements WasherService{
 			}
 		}
 		
+		String msg = "";
+		
+		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
+		Pattern nameP = Pattern.compile(nameRegex);
+		Matcher m1 = nameP.matcher(washer.getFirstName());
+		if(!m1.matches()) msg = msg + "Invalid first name.\n";
+		Matcher m2 = nameP.matcher(washer.getLastName());
+		if(!m2.matches()) msg = msg + "Invalid last name.\n";
+		
+		String numberRegex = "^[6-9]{1}[0-9]{9}$";
+		Pattern numberP = Pattern.compile(numberRegex);
+		Matcher m3 = numberP.matcher(washer.getPhoneNumber());
+		if(!m3.matches()) msg = msg+"Invalid phone number.\n";
+		
+		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
+		Pattern passP = Pattern.compile(passRegex);
+		Matcher m8 = passP.matcher(washer.getPassword());
+		if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
+		int a = 0;
+		try {
+			a = Integer.parseInt(washer.getAge());
+			if(a<18) msg = msg + "Age can't be below 18. ";
+		}catch(NumberFormatException e) {
+			msg = msg + "Invalid age. ";
+		}
+		if(msg.equals("")) {
 			return washerRepository.save(washer);
+		}
+		throw new InvalidDetailsException(msg);
 	}
 
 	@Override
@@ -48,16 +76,43 @@ public class WasherServiceImpl implements WasherService{
 		Washer w = washerRepository.findByPhoneNumber(phoneNumber).
 				orElseThrow(()-> new InvalidDetailsException("Washer does not exist. "));
 		for(Washer ww : washerRepository.findAll()) {
+			if(!(ww.getPhoneNumber().equals(w.getPhoneNumber()))) {
 			if(ww.getPhoneNumber().equals(washer.getPhoneNumber())) {
-				throw new InvalidDetailsException(
-						"Washer already exists with this phone number. ");
+				throw new InvalidDetailsException("Washer already exists with this phone number. ");
+			}
 			}
 		}
 		
-			/////updating the change into the history
+		String msg = "";
+		
+		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
+		Pattern nameP = Pattern.compile(nameRegex);
+		Matcher m1 = nameP.matcher(washer.getFirstName());
+		if(!m1.matches()) msg = msg + "Invalid first name.\n";
+		Matcher m2 = nameP.matcher(washer.getLastName());
+		if(!m2.matches()) msg = msg + "Invalid last name.\n";
+		
+		String numberRegex = "^[6-9]{1}[0-9]{9}$";
+		Pattern numberP = Pattern.compile(numberRegex);
+		Matcher m3 = numberP.matcher(washer.getPhoneNumber());
+		if(!m3.matches()) msg = msg+"Invalid phone number.\n";
+		
+		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
+		Pattern passP = Pattern.compile(passRegex);
+		Matcher m8 = passP.matcher(washer.getPassword());
+		if(!m8.matches())msg = msg + "Password did not match the requirements.\n";
+		int a = 0;
+		try {
+			a = Integer.parseInt(washer.getAge());
+			if(a<18) msg = msg + "Age can't be below 18. ";
+		}catch(NumberFormatException e) {
+			msg = msg + "Invalid age. ";
+		}
+		if(msg.equals("")) {
+			/////updating the changes in the history
 			List<BookingDetails> list = null; 
 			ResponseEntity<List<BookingDetails>> response = rest.exchange(
-				    "http://localhost:"+bPort+"/booking/viewBookingHistory",
+				    "http://localhost:"+bPort+"/booking/viewWasherHistory/"+phoneNumber,
 				    HttpMethod.GET,
 				    null,
 				    new ParameterizedTypeReference<List<BookingDetails>>() {}
@@ -65,29 +120,31 @@ public class WasherServiceImpl implements WasherService{
 
 				if (response.getStatusCode()==HttpStatus.OK) {
 				    list =  response.getBody();
-				}
-			for(BookingDetails bd : list) {
-				if(bd.getWasherPhoneNumber().equals(phoneNumber)) {
-					String name = washer.getFirstName()+" "+ washer.getLastName();
-					// Define the URL with the appropriate values for oldPhoneNumber, customerName, and phoneNumber
-					String url = "http://localhost:"+bPort+"/booking/updateWasherDetails/{oldPhoneNumber}/{washerName}/{phoneNumber}";
+				    
+				    for(BookingDetails bd : list) {
+						if(bd.getWasherPhoneNumber().equals(phoneNumber)) {
+							String name = washer.getFirstName()+" "+ washer.getLastName();
+							// Define the URL with the appropriate values for oldPhoneNumber, customerName, and phoneNumber
+							String url = "http://localhost:"+bPort+"/booking/updateWasherDetails/{oldPhoneNumber}/{washerName}/{phoneNumber}";
 
-					// Set up the URL parameters
-					Map<String, String> urlParams = new HashMap<>();
-					urlParams.put("oldPhoneNumber", phoneNumber);
-					urlParams.put("washerName", name);
-					urlParams.put("phoneNumber", washer.getPhoneNumber());
+							// Set up the URL parameters
+							Map<String, String> urlParams = new HashMap<>();
+							urlParams.put("oldPhoneNumber", phoneNumber);
+							urlParams.put("washerName", name);
+							urlParams.put("phoneNumber", washer.getPhoneNumber());
 
-					// Send a PUT request
-					ResponseEntity<String> responseEntity = rest.exchange(
-					    url,
-					    HttpMethod.PUT,
-					    null,
-					    String.class,
-					    urlParams
-					);
+							// Send a PUT request
+							ResponseEntity<String> responseEntity = rest.exchange(
+							    url,
+							    HttpMethod.PUT,
+							    null,
+							    String.class,
+							    urlParams
+							);
+						}
+					}
 				}
-			}
+			
 			///////
 			w.setFirstName(washer.getFirstName());
 			w.setLastName(washer.getLastName());
@@ -95,6 +152,8 @@ public class WasherServiceImpl implements WasherService{
 			w.setPhoneNumber(washer.getPhoneNumber()); 
 			w.setAge(washer.getAge());
 			return washerRepository.save(w);
+		}
+		throw new InvalidDetailsException(msg);
 	}
 
 	@Override
@@ -127,6 +186,13 @@ public class WasherServiceImpl implements WasherService{
 		w.setRating(r);
 		w.setWashesDone(w.getWashesDone()+1);
 		return washerRepository.save(w);
+	}
+
+	@Override
+	public Washer login(String phoneNumber, String password) {
+		Washer w = washerRepository.findByPhoneNumberAndPassword(phoneNumber, password).
+				orElseThrow(()-> new InvalidDetailsException("Invalid Credentials. "));
+		return w;
 	}
 	
 }

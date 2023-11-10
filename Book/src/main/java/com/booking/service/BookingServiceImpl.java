@@ -36,10 +36,10 @@ public class BookingServiceImpl implements BookingService{
 	private PackagesRepository packagesRepository;
 	@Autowired
 	private AddOnsRepository addonsRepository;
-	
+
 	@Autowired
 	private RestTemplate rest;
-	
+
 	private static final int cPort = 8088;
 	private static final int wPort = 8086;
 
@@ -56,18 +56,18 @@ public class BookingServiceImpl implements BookingService{
 			}
 		}
 		if(n==0) throw new BookingException("Car does not exist. ");
-		 
+
 		//setting up the booking date and time
 		LocalDateTime localDateTime = LocalDateTime.now();
-        // Convert it to IST (Indian Standard Time)
-        ZoneId istZoneId = ZoneId.of("Asia/Kolkata");
-        ZonedDateTime istDateTime = localDateTime.atZone(istZoneId);
-        // Define the desired date and time format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy : HH:mm:ss");
-        // Format the date and time
-        String formattedDateTime = istDateTime.format(formatter);
+		// Convert it to IST (Indian Standard Time)
+		ZoneId istZoneId = ZoneId.of("Asia/Kolkata");
+		ZonedDateTime istDateTime = localDateTime.atZone(istZoneId);
+		// Define the desired date and time format
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy : HH:mm:ss");
+		// Format the date and time
+		String formattedDateTime = istDateTime.format(formatter);
 		bookingDetails.setBookingDateAndTime(formattedDateTime);
-        
+
 		String bId = bookingDetails.getWashDate()+"_"+
 				bookingDetails.getWashTime()+"_"+bookingDetails.getCarNumber();
 		for(BookingDetails d : history) {
@@ -75,21 +75,21 @@ public class BookingServiceImpl implements BookingService{
 				throw new BookingException("Booking already exists. ");
 			}
 		}
-		
+
 		List<Washer> washerList = null;
 		ResponseEntity<List<Washer>> response = rest.exchange(
-			    "http://localhost:"+wPort+"/washer/viewAllWasher",
-			    HttpMethod.GET,
-			    null,
-			    new ParameterizedTypeReference<List<Washer>>() {}
-			);
+				"http://localhost:"+wPort+"/washer/viewAllWasher",
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Washer>>() {}
+				);
 
-			if (response.getStatusCode()==HttpStatus.OK) {
-			    washerList = response.getBody();
-			}
-			
-		
-		
+		if (response.getStatusCode()==HttpStatus.OK) {
+			washerList = response.getBody();
+		}
+
+
+
 		for(Washer w : washerList) { 
 			int count = 0;
 			for(BookingDetails detail : history) {
@@ -106,12 +106,12 @@ public class BookingServiceImpl implements BookingService{
 				bookingDetails.setCustomerName(cust.getFirstName()+ " " + cust.getLastName());
 				bookingDetails.setWasherName(w.getFirstName()+ " "+ w.getLastName());
 				bookingDetails.setBookingId(bookingDetails.getWashDate()+"_"+
-							bookingDetails.getWashTime()+"_"+bookingDetails.getCarNumber());
+						bookingDetails.getWashTime()+"_"+bookingDetails.getCarNumber());
 				bookingDetails.setCustomerPhoneNumber(cust.getPhoneNumber());
 				bookingDetails.setWasherPhoneNumber(w.getPhoneNumber());
 				bookingDetails.setCustomerRating(cust.getRating());
 				bookingDetails.setWasherRating(w.getRating());
-				
+
 				Packages p = packagesRepository.findByPackageName(bookingDetails.getWashPackage());
 				if(p==null) msg = msg + "Invalid Package: "+ bookingDetails.getWashPackage()+ ".\n";
 				for(String s : bookingDetails.getWashAddOn()) {
@@ -121,7 +121,7 @@ public class BookingServiceImpl implements BookingService{
 				if(msg!="") throw new BookingException(msg);
 				return bookingRepository.save(bookingDetails); 
 			}
-			
+
 		} 
 		throw new BookingException("No washer available at the given time slot. Sorry for the inconvenience. "); 
 	}
@@ -132,24 +132,24 @@ public class BookingServiceImpl implements BookingService{
 		b = bookingRepository.findByBookingId(bookingId);
 		if(b==null) throw new BookingException("Booking does not exist. ");
 		if(b.getWashStatus().equals("ACCEPTED") && b.getWashStatus().equals("REJECTED") &&
-			b.getWashStatus().equals("CANCELLED")){
+				b.getWashStatus().equals("CANCELLED")){
 			throw new BookingException("Cannot be rescheduled. Sorry for the inconvenience. ");
-			}
-		
+		}
+
 		List<Washer> washerList = null;
 		ResponseEntity<List<Washer>> response = rest.exchange(
-			    "http://localhost:"+wPort+"/washer/viewAllWasher",
-			    HttpMethod.GET,
-			    null,
-			    new ParameterizedTypeReference<List<Washer>>() {}
-			);
+				"http://localhost:"+wPort+"/washer/viewAllWasher",
+				HttpMethod.GET,
+				null,
+				new ParameterizedTypeReference<List<Washer>>() {}
+				);
 
-			if (response.getStatusCode()==HttpStatus.OK) {
-			    washerList = response.getBody();
-			}
+		if (response.getStatusCode()==HttpStatus.OK) {
+			washerList = response.getBody();
+		}
 		List<BookingDetails> list = bookingRepository.findAll();
-		
-		
+
+
 		for(Washer w : washerList) {
 			int count = 0;
 			for(BookingDetails book : list) {
@@ -178,7 +178,7 @@ public class BookingServiceImpl implements BookingService{
 				bookingRepository.save(b);
 				return b;
 			}
-			
+
 		}
 		throw new BookingException("Washer unavailable at the given time slot. Sorry for the inconvenience. ");
 	}
@@ -220,21 +220,21 @@ public class BookingServiceImpl implements BookingService{
 		b = bookingRepository.findByBookingId(bookingId);
 		if(b==null) throw new BookingException("Booking does not exist. ");
 		if(b.getWashStatus().equals("COMPLETED")) throw new BookingException("Wash Completed already. ");
-		
-		
+
+
 		b.setCustomerRatingGiven(rating);
 		b.setWashStatus("COMPLETED");
-		
+
 		//updating the customerRating in customer entity of userManagementModule
 		RatingRequestHelper request = new RatingRequestHelper(b.getCustomerPhoneNumber(), rating);
-        HttpEntity<RatingRequestHelper> entity = new HttpEntity<>(request);
-		
+		HttpEntity<RatingRequestHelper> entity = new HttpEntity<>(request);
+
 		ResponseEntity<String> response = rest.exchange(
 				"http://localhost:"+cPort+"/customer/updateCustomerRating/" + b.getCustomerPhoneNumber()+"/"+ rating,
-	            HttpMethod.PUT,
-	            entity,
-	            String.class
-	        );
+				HttpMethod.PUT,
+				entity,
+				String.class
+				);
 		//updating the customer rating in the booking details
 		Customer cust = rest.getForObject
 				("http://localhost:"+cPort+"/customer/viewCustomer/"+b.getCustomerPhoneNumber(), Customer.class);
@@ -253,7 +253,7 @@ public class BookingServiceImpl implements BookingService{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy : HH:mm:ss");
 		String formattedDateTime = istDateTime.format(formatter);
 		inv.setBillingDateAndTime(formattedDateTime);
-		
+
 		double amount = 0;
 		Packages p = packagesRepository.findByPackageName(b.getWashPackage());
 		amount += p.getPrice();
@@ -261,7 +261,7 @@ public class BookingServiceImpl implements BookingService{
 			AddOns a = addonsRepository.findByAddOnName(s);
 			amount+=a.getPrice();
 		}
-		 
+
 		inv.setBill_Amount(amount);
 		inv.setBookingId(bookingId);
 		inv.setWash_package(b.getWashPackage());
@@ -280,13 +280,13 @@ public class BookingServiceImpl implements BookingService{
 		//updating the washerRating in Washer Module
 		RatingRequestHelper request = new RatingRequestHelper(b.getWasherPhoneNumber(), rating);
 		HttpEntity<RatingRequestHelper> entity = new HttpEntity<>(request);
-		
+
 		ResponseEntity<String> response = rest.exchange(
-						"http://localhost:"+wPort+"/washer/updateWasherRating/" + b.getWasherPhoneNumber()+"/"+ rating,
-			            HttpMethod.PUT,
-			            entity,
-			            String.class
-			        );
+				"http://localhost:"+wPort+"/washer/updateWasherRating/" + b.getWasherPhoneNumber()+"/"+ rating,
+				HttpMethod.PUT,
+				entity,
+				String.class
+				);
 		//updating the washer rating in the booking details
 		Washer w = rest.getForObject
 				("http://localhost:"+wPort+"/washer/viewWasher/"+b.getWasherPhoneNumber(), Washer.class);
@@ -344,6 +344,7 @@ public class BookingServiceImpl implements BookingService{
 	@Override
 	public void updateWasherDetails(String oldPhoneNumber, String name, String phoneNumber) {
 		List<BookingDetails> b = bookingRepository.findAll();
+		if(b.isEmpty()) throw new BookingException("no washes");
 		for(BookingDetails bd : b) {
 			if(bd.getWasherPhoneNumber().equals(oldPhoneNumber)) {
 				bd.setWasherName(name);
@@ -356,6 +357,7 @@ public class BookingServiceImpl implements BookingService{
 	@Override
 	public void updateCustomerDetails(String oldPhoneNumber, String name, String phoneNumber) {
 		List<BookingDetails> b = bookingRepository.findAll();
+		if(b.isEmpty()) throw new BookingException("no washes");
 		for(BookingDetails bd : b) {
 			if(bd.getCustomerPhoneNumber().equals(oldPhoneNumber)) {
 				bd.setCustomerName(name);
@@ -364,5 +366,5 @@ public class BookingServiceImpl implements BookingService{
 			}
 		}
 	}
-	
+
 }

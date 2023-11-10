@@ -8,10 +8,11 @@ import com.admin.entity.HistoryOfBookings;
 import com.admin.entity.WasherOverview;
 
 public interface AdminService {
+		public AdminDetails login(String username, String password);
 		public AdminDetails addAdmin(AdminDetails adminDetails);
 		public AdminDetails updateAdmin(String username, AdminDetails adminDetails);
 		public void deleteAdmin(String userName);
-		public List<String> viewAdmins();
+		public AdminDetails viewAdmin(String userName);
 		
 		public List<CustomerOverview> viewCustomerOverview();
 		public List<WasherOverview> viewWasherOverview();

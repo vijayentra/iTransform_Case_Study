@@ -3,6 +3,8 @@ package com.customer.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,11 +13,11 @@ public class Customer {
 	
 	@Id
 	private String id;
-	private String phoneNumber;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private String pinCode;
+	private String phoneNumber = "";
+	private String password = "";
+	private String firstName = "";
+	private String lastName = "";
+	private String pinCode = "";
 	private List<CarDetails> carsList = new ArrayList<>();
 	private double rating =0.0;
 	private int washesDone = 0;

@@ -2,6 +2,8 @@ package com.admin.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -48,39 +50,70 @@ public class AdminServiceImpl implements AdminService{
 				throw new InvalidAdminException("Admin username already exists. ");
 			}
 		}
-		return adminRepository.save(adminDetails);
+		String msg = "";
+		if(adminDetails.getUsername().trim().length()==0) msg = msg+ "Username cannot be empty.\n";
+		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
+		Pattern nameP = Pattern.compile(nameRegex);
+		Matcher m1 = nameP.matcher(adminDetails.getUsername());
+		if(!m1.matches()) msg = msg + "Invalid username.\n";
+		
+		if(adminDetails.getPassword().trim().length()==0) msg = msg + "Password cannot be empty.\n";
+		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
+		Pattern passP = Pattern.compile(passRegex);
+		Matcher m8 = passP.matcher(adminDetails.getPassword());
+		if(!m8.matches())msg = msg + "Password is weak. Make it stronger.\n";
+		if(msg.equals("")) {
+			return adminRepository.save(adminDetails);
+		}
+		throw new InvalidAdminException(msg);
 	}
 
 	@Override
 	public AdminDetails updateAdmin(String username, AdminDetails adminDetails) {
-		AdminDetails ad = adminRepository.findByUsername(username);
+		AdminDetails ad = adminRepository.findByUsername(username).
+				orElseThrow(()->new InvalidAdminException("Admin does not exist."));
 		if(ad==null) throw new InvalidAdminException("Admin does not exist. ");
 		for(AdminDetails a : adminRepository.findAll()) {
+			if(!a.getUsername().equals(ad.getUsername())) {
 			if(a.getUsername().equals(adminDetails.getUsername())) {
 				throw new InvalidAdminException("Admin already exists with the name. ");
+				}
 			}
 		}
-		ad.setUsername(adminDetails.getUsername());
-		ad.setPassword(adminDetails.getPassword());
-		return adminRepository.save(ad);
+		String msg = "";
+		if(adminDetails.getUsername().trim().length()==0) msg = msg+ "Username cannot be empty. ";
+		String nameRegex = "^[A-Z]{1}[a-z]{0,19}$";
+		Pattern nameP = Pattern.compile(nameRegex);
+		Matcher m1 = nameP.matcher(adminDetails.getUsername());
+		if(!m1.matches()) msg = msg + "Invalid username.\n";
+		
+		if(adminDetails.getPassword().trim().length()==0) msg = msg + "Password cannot be empty. ";
+		String passRegex = "^(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$";
+		Pattern passP = Pattern.compile(passRegex);
+		Matcher m8 = passP.matcher(adminDetails.getPassword());
+		if(!m8.matches())msg = msg + "Password is weak. Make it stronger.\n";
+		
+		if(msg.equals("")) {
+			ad.setUsername(adminDetails.getUsername());
+			ad.setPassword(adminDetails.getPassword());
+			return adminRepository.save(ad);
+		}
+		throw new InvalidAdminException(msg);
 	}
 
 	@Override
 	public void deleteAdmin(String userName) { 
-		AdminDetails ad = adminRepository.findByUsername(userName);
+		AdminDetails ad = adminRepository.findByUsername(userName).
+				orElseThrow(()->new InvalidAdminException("Admin does not exist."));
 		if(ad==null) throw new InvalidAdminException("Admin does not exist. ");
 		adminRepository.delete(ad);
 	}
 
 	@Override
-	public List<String> viewAdmins() {
-		List<AdminDetails> list = adminRepository.findAll();
-		if(list==null) throw new InvalidAdminException("No admin registered. ");
-		List<String> res = new ArrayList<>();
-		for(AdminDetails ad : list) {
-			res.add(ad.getUsername());
-		}
-		return res;
+	public AdminDetails viewAdmin(String userName) {
+		AdminDetails ad = adminRepository.findByUsername(userName).
+				orElseThrow(()->new InvalidAdminException("Admin does not exist."));
+		return ad;
 	}
 
 	@Override
@@ -110,7 +143,7 @@ public class AdminServiceImpl implements AdminService{
 					customerRepository.save(u);
 			}
 		List<CustomerOverview> list = customerRepository.findAll();
-		if(list==null) throw new InvalidAdminException("Empty List.");
+		if(list.isEmpty()) throw new InvalidAdminException("Empty List.");
 		return list;
 	}
 
@@ -140,7 +173,7 @@ public class AdminServiceImpl implements AdminService{
 					washerRepository.save(u);
 				}
 		List<WasherOverview> list = washerRepository.findAll();
-		if(list==null) throw new InvalidAdminException("Empty List.");
+		if(list.isEmpty()) throw new InvalidAdminException("Empty List.");
 		return list;
 	}
 
@@ -159,15 +192,23 @@ public class AdminServiceImpl implements AdminService{
 			if (response.getStatusCode()==HttpStatus.OK) {
 			    list =  response.getBody();
 			}
+		
 		for(BookingDetails bd : list) {
 			HistoryOfBookings h = new HistoryOfBookings(bd.getBookingDateAndTime(),bd.getBookingId(),
-					bd.getCustomerName(),bd.getCustomerPhoneNumber(),bd.getCustomerRatingGiven(),bd.getWasherName(),
-					bd.getWasherPhoneNumber(),bd.getWasherRatingGiven(),bd.getWashStatus());
+						bd.getCustomerName(),bd.getCustomerPhoneNumber(),bd.getCustomerRatingGiven(),bd.getWasherName(),
+						bd.getWasherPhoneNumber(),bd.getWasherRatingGiven(),bd.getWashStatus());
 			historyRepository.save(h); 
 		}
 		List<HistoryOfBookings> res = historyRepository.findAll();
-		if(res==null) throw new InvalidAdminException("No history of bookings. ");
+		if(res.isEmpty()) throw new InvalidAdminException("No history of bookings. ");
 		return res;
+	}
+
+	@Override
+	public AdminDetails login(String username, String password) {
+		AdminDetails ad = adminRepository.findByUsernameAndPassword(username, password).
+				orElseThrow(()->new InvalidAdminException("Invalid Credentials!"));
+		return ad;
 	}
 
 	

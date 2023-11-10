@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.customer.dummyentity.loginRequest;
 import com.customer.entity.CarDetails;
 import com.customer.entity.Customer;
 import com.customer.exception.InvalidDetailsException;
@@ -22,10 +24,24 @@ import com.customer.service.CustomerService;
 
 @RestController
 @RequestMapping("/customer")
+@CrossOrigin("*")
 public class CustomerController {
 
 	@Autowired
 	private CustomerService customerService;
+	
+	//LOGIN
+	@GetMapping("/loginCustomer/{username}/{password}")
+	public ResponseEntity<?> loginCustomer(@PathVariable String username, @PathVariable String password){
+		Customer cus = null;
+		try {
+			cus = customerService.login(username,password);
+		}catch(InvalidDetailsException e) {
+			System.out.println(e.getMessage());
+			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(cus,HttpStatus.OK); 
+	}
 	
 	//ADD A CUSTOMER
 	@PostMapping("/add")
@@ -36,6 +52,8 @@ public class CustomerController {
 		}catch(InvalidDetailsException e) {
 			System.out.println(e.getMessage());
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}catch(NullPointerException e) {
+			return new ResponseEntity<>("Fields can't be empty. Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(cus,HttpStatus.OK); 
 	}
@@ -48,6 +66,8 @@ public class CustomerController {
 			car = customerService.addCarDetails(phoneNumber, carDetails);
 		}catch(InvalidDetailsException e) {
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}catch(NullPointerException e) {
+			return new ResponseEntity<>("Fields can't be empty. Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(car,HttpStatus.OK); 
 	}
@@ -60,6 +80,8 @@ public class CustomerController {
 		cus = customerService.updateCustomer(phoneNumber,customer);
 		}catch(InvalidDetailsException  e) {
 			return new ResponseEntity<>(e.getMessage()+ "Please try again!", HttpStatus.BAD_REQUEST);
+		}catch(NullPointerException e) {
+			return new ResponseEntity<>("Fields can't be empty. Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(cus,HttpStatus.OK);
 	}
@@ -73,6 +95,8 @@ public class CustomerController {
 			car = customerService.updateCarDetails(phoneNumber, plateNumber, carDetails);
 		}catch(InvalidDetailsException e) {
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}catch(NullPointerException e) {
+			return new ResponseEntity<>("Fields can't be empty. Please try again!", HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(car,HttpStatus.OK);
 	}

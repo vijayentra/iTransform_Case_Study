@@ -168,43 +168,43 @@ class AdminControllerTest {
         verify(adminService, times(1)).deleteAdmin("admin123");
     }
     
-    @Test
-    public void testViewAdmins_ViewSuccessfully() {
-        // Create a list of admin usernames for testing
-        List<String> adminList = new ArrayList<>();
-        adminList.add("admin1");
-        adminList.add("admin2");
-        adminList.add("admin3");
-
-        // Mock the behavior of adminService.viewAdmins to return the list of admin usernames
-        when(adminService.viewAdmins()).thenReturn(adminList);
-
-        // Call the viewAdmins method
-        ResponseEntity<?> responseEntity = adminController.viewAdmins();
-
-        // Verify that it returns an HTTP status code of 200 (OK)
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        // Verify the response body contains the expected list of admin usernames
-        assertEquals(adminList, responseEntity.getBody());
-
-        // Verify that adminService.viewAdmins is called
-        verify(adminService, times(1)).viewAdmins();
-    }
-
-    @Test
-    public void testViewAdmins_NoAdminsFound() {
-        // Mock the behavior of adminService.viewAdmins to throw an InvalidAdminException (No admins found)
-        when(adminService.viewAdmins()).thenThrow(InvalidAdminException.class);
-
-        // Call the viewAdmins method and expect an HTTP status code of 400 (Bad Request)
-        ResponseEntity<?> responseEntity = adminController.viewAdmins();
-
-        // Verify that it returns an HTTP status code of 400 (Bad Request)
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-        // Verify that adminService.viewAdmins is called
-        verify(adminService, times(1)).viewAdmins();
-    }
+//    @Test
+//    public void testViewAdmins_ViewSuccessfully() {
+//        // Create a list of admin usernames for testing
+//        List<String> adminList = new ArrayList<>();
+//        adminList.add("admin1");
+//        adminList.add("admin2");
+//        adminList.add("admin3");
+//
+//        // Mock the behavior of adminService.viewAdmins to return the list of admin usernames
+//        when(adminService.viewAdmins()).thenReturn(adminList);
+//
+//        // Call the viewAdmins method
+//        ResponseEntity<?> responseEntity = adminController.viewAdmins();
+//
+//        // Verify that it returns an HTTP status code of 200 (OK)
+//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+//        // Verify the response body contains the expected list of admin usernames
+//        assertEquals(adminList, responseEntity.getBody());
+//
+//        // Verify that adminService.viewAdmins is called
+//        verify(adminService, times(1)).viewAdmins();
+//    }
+//
+//    @Test
+//    public void testViewAdmins_NoAdminsFound() {
+//        // Mock the behavior of adminService.viewAdmins to throw an InvalidAdminException (No admins found)
+//        when(adminService.viewAdmins()).thenThrow(InvalidAdminException.class);
+//
+//        // Call the viewAdmins method and expect an HTTP status code of 400 (Bad Request)
+//        ResponseEntity<?> responseEntity = adminController.viewAdmins();
+//
+//        // Verify that it returns an HTTP status code of 400 (Bad Request)
+//        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+//
+//        // Verify that adminService.viewAdmins is called
+//        verify(adminService, times(1)).viewAdmins();
+//    }
     
     @Test
     public void testViewCustomerOverview_ViewSuccessfully() {

@@ -5,6 +5,7 @@ import java.util.List;
 import com.washer.entity.Washer;
 
 public interface WasherService {
+	public Washer login(String phoneNumber, String password);
 	public Washer addWasher(Washer washer);
 	public  Washer updateWasher(String phoneNumber, Washer washer);
 	public void deleteWasher(String phoneNumber);
