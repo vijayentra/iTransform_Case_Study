@@ -28,6 +28,7 @@ public class CustomerServiceImpl implements CustomerService {
 	private RestTemplate rest;
 	
 	private static final int bPort = 8082;
+		
 	
 	@Override
 	public Customer addCustomer(Customer customer) throws InvalidDetailsException{

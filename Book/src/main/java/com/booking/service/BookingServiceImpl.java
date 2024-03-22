@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService{
 
 		//setting up the booking date and time
 		LocalDateTime localDateTime = LocalDateTime.now();
-		// Convert it to IST (Indian Standard Time)
+		// Convert it to IST
 		ZoneId istZoneId = ZoneId.of("Asia/Kolkata");
 		ZonedDateTime istDateTime = localDateTime.atZone(istZoneId);
 		// Define the desired date and time format

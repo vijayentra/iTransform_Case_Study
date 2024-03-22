@@ -55,7 +55,7 @@ function AddCar(){
             alert("New Car Added.")
         }).catch((error) => {
             console.error("Login error:", error);
-            alert("Invalid input.");
+            alert(error.response.data);
         })
     }
 
@@ -79,6 +79,7 @@ function AddCar(){
                 >
                     Car Number
                 </label>
+                <span className="text-xs text-red-500">sample format: 'MH04AA8888'</span>
             </div>
             <div className="relative z-0 w-full mb-6 group">
                 <input
@@ -151,6 +152,7 @@ function AddCar(){
                 >
                     Manufacturing Year
                 </label>
+                <span className="text-xs text-red-500">Min year: 2008</span>
             </div>
             <div className="relative z-0 w-full mb-6 group">
                 <input
@@ -167,8 +169,9 @@ function AddCar(){
                     for="length"
                     className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                 >
-                    Car Length
+                    Car Length(in mm)
                 </label>
+                <span className="text-xs text-red-500">between 2000mm and 6000mm</span>
             </div>
             <button
                 type="button"

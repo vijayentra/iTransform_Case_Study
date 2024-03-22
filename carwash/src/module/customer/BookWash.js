@@ -59,7 +59,7 @@ function BookWash() {
       })
       .catch((error) => {
         console.error('Error:', error);
-        alert("Check the input details.")
+        alert(error.response.data)
       });
   };
 
@@ -206,6 +206,7 @@ function BookWash() {
 
       <div className="booking-form">
         <h2>Car Wash Booking</h2>
+        <label for="phone no" class="leading-6 text-sm text-gray-600">*All Fields are mandatory except add ons</label>
         <form>
           <div>
             <label>

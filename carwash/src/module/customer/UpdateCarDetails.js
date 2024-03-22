@@ -77,7 +77,7 @@ function UpdateCarDetails(){
             alert("Details updated.")
         }).catch((error) => {
             console.error("Login error:", error);
-            alert("Invalid input.");
+            alert(error.response.data);
         })
     }
 
@@ -101,6 +101,7 @@ function UpdateCarDetails(){
                 >
                     Car Number
                 </label>
+                <span className="text-xs text-red-500">sample format: 'MH04AA8888'</span>
             </div>
             <div className="relative z-0 w-full mb-6 group">
                 <input
@@ -173,6 +174,7 @@ function UpdateCarDetails(){
                 >
                     Manufacturing Year
                 </label>
+                <span className="text-xs text-red-500">Min year: 2008</span>
             </div>
             <div className="relative z-0 w-full mb-6 group">
                 <input
@@ -191,6 +193,7 @@ function UpdateCarDetails(){
                 >
                     Car Length
                 </label>
+                <span className="text-xs text-red-500">between 2000mm and 6000mm</span>
             </div>
             <button
                 type="button"
